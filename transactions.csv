@@ -1,6 +1,6 @@
-2024-01-23,100,home depot,drill
-2024-01-23,10.54,plan b,burger
-2024-01-24,3,toll,toll
-2024-01-25,112,Amazon,new SSD
-2024-01-26,500,IRS,tax2024-04-14,100,gain,,Daily increment (2),100
-2024-04-14,100,gain,,Daily increment (2),100
+2024-01-23,-100,home depot,drill,1110.54
+2024-01-23,-10.54,plan b,burger,1100
+2024-01-24,-3,toll,toll,1097
+2024-01-25,112,Amazon,SSD refund,985
+2024-01-26,-500,IRS,tax,485
+2024-04-14,50,,Daily increment (1),-250

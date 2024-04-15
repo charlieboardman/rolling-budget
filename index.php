@@ -4,27 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rolling Budget App</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+
 </head>
 
 <!--Check when app was last opened and add number of days needed-->
 <?php
 
 #Functions
-function transact($date,$amount,$type,$vendor,$description) {
+function transact($date,$amount,$vendor,$description) {
     
     $old_total = floatval(file_get_contents('total.txt'));
 
-    if ($type == 'gain') {
-        $new_total = $old_total + $amount;
-    }
-    
-    if ($type == 'spend') {
-        $new_total = $old_total - $amount;
-    }
+    $new_total = $old_total + $amount;
+
+    file_put_contents('total.txt',$new_total);
 
     $date_str = $date->format('Y-m-d');
 
-    $new_transaction = "$date_str,$amount,$type,$vendor,$description,$new_total\n";
+    $new_transaction = "$date_str,$amount,$vendor,$description,$new_total\n";
 
     return $new_transaction;
 }
@@ -46,8 +53,7 @@ $days_since_opening = date_diff($last_opened,$today,TRUE)->format('%a');
 if ($days_since_opening != 0) {
     #Get daily increment
     $daily_increment = file_get_contents('daily-increment.txt');
-    $days_since_opening_int = $days_since_opening;
-    $new_line = transact($today,$daily_increment * $days_since_opening_int,'gain','',"Daily increment ($days_since_opening_int)");
+    $new_line = transact($today,$daily_increment*$days_since_opening, "", "Daily increment ($days_since_opening)");
     file_put_contents('transactions.csv', $new_line, FILE_APPEND);
 }
 
@@ -70,14 +76,14 @@ echo $new_line;
     <tr>
         <th>Date</th>
         <th>Amount</th>
-        <th>Type</th>
         <th>Vendor</th>
         <th>Description</th>
+        <th>New Total</th>
     </tr>
 
     <?php
 
-    #Read the last n lines of the transaction file. If there are less than 5, read however many there are
+    #Read the last n lines of the transaction file. If there are less than n, read however many there are
     
     #n last lines you want
     $n = 5;
@@ -89,17 +95,29 @@ echo $new_line;
         $fields = str_getcsv($line);
 
         $date = $fields[0];
-        $amount = $fields[1];
-        $type = $fields[2];
-        $vendor = $fields[3];
-        $description = $fields[4];
+        $amount_raw = $fields[1];
+        
+        if ($amount_raw < 0){
+            $amount = "-$" . number_format(abs($amount_raw));
+        } else {
+            $amount = "$" . number_format($amount_raw);
+        }
+        
+        $vendor = $fields[2];
+        $description = $fields[3];
+        $new_total_raw = $fields[4];
 
+        if ($new_total_raw < 0){
+            $new_total = "-$" . number_format(abs($new_total_raw));
+        } else {
+            $new_total = "$" . number_format($new_total_raw);
+        }
         echo "<tr>
                 <td>$date</td>
                 <td>$amount</td>
-                <td>$type</td>
                 <td>$vendor</td>
                 <td>$description</td>
+                <td>$new_total</td>
             </tr>";
     }
     ?>
