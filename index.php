@@ -21,7 +21,7 @@
 <?php
 
 #Functions
-function transact($date,$amount,$vendor,$description) {
+function build_transaction($date,$amount,$vendor,$description) {
     
     $old_total = floatval(file_get_contents('total.txt'));
 
@@ -53,7 +53,7 @@ $days_since_opening = date_diff($last_opened,$today,TRUE)->format('%a');
 if ($days_since_opening != 0) {
     #Get daily increment
     $daily_increment = file_get_contents('daily-increment.txt');
-    $new_line = transact($today,$daily_increment*$days_since_opening, "", "Daily increment ($days_since_opening)");
+    $new_line = build_transaction($today,$daily_increment*$days_since_opening, "", "Daily increment ($days_since_opening)");
     file_put_contents('transactions.csv', $new_line, FILE_APPEND);
 }
 
@@ -66,10 +66,23 @@ echo "<br>";
 echo $last_opened->format('Y-m-d');
 echo "<br>";
 echo $days_since_opening;
-echo "<br>";
-echo $daily_increment;
-echo "<br>";
-echo $new_line;
+
+#Process form submission, which means a transaction input
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $amount = floatval($_POST["amount"]);
+    $vendor = $_POST["vendor"];
+    $description = $_POST["description"];
+    $today = new DateTime(date("Y-m-d"));
+
+    if (isset($_POST["spend"])) {
+        $amount = -$amount;
+    }
+
+    $new_line = build_transaction($today, $amount, $vendor, $description);
+    file_put_contents('transactions.csv', $new_line, FILE_APPEND);
+
+}
+
 ?>
 
 <table>
@@ -123,4 +136,32 @@ echo $new_line;
     ?>
 
 </table>
+
+    <h2>Add Transaction</h2>
+    
+    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <table>
+            <tr>
+                <td>
+                    <label for="amount">Amount:</label>
+                    <input type="number" step="0.01" id="amount" name="amount" required>
+                </td>
+
+                <td>
+                    <label for="vendor">Vendor:</label>
+                    <input type="text" id="vendor" name="vendor">
+                </td>
+
+                <td>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description">
+                </td>
+
+                <td>
+                    <input type="submit" name="spend" value="Spend">
+                    <input type="submit" name="gain" value="Gain">
+                </td>
+            </tr>
+        </table>
+    
 </html>
