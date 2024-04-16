@@ -140,28 +140,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Add Transaction</h2>
     
     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-        <table>
-            <tr>
-                <td>
-                    <label for="amount">Amount:</label>
-                    <input type="number" step="0.01" id="amount" name="amount" required>
-                </td>
+        <br>
+            <label for="amount">Amount:</label>
+            <input type="number" step="0.01" id="amount" name="amount" required>
 
-                <td>
-                    <label for="vendor">Vendor:</label>
-                    <input type="text" id="vendor" name="vendor">
-                </td>
+        <br>
+            <label for="vendor">Vendor:</label>
+            <input type="text" id="vendor" name="vendor">
 
-                <td>
-                    <label for="description">Description:</label>
-                    <input type="text" id="description" name="description">
-                </td>
+        <br>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description">
 
-                <td>
-                    <input type="submit" name="spend" value="Spend">
-                    <input type="submit" name="gain" value="Gain">
-                </td>
-            </tr>
-        </table>
-    
+        <br>
+            <input type="submit" name="spend" value="Spend">
+            <input type="submit" name="gain" value="Gain">
+    </form>
 </html>
