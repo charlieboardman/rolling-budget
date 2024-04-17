@@ -156,4 +156,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="submit" name="spend" value="Spend">
             <input type="submit" name="gain" value="Gain">
     </form>
+
+<br>
+<a href='transactions.csv' download>Download Transactions CSV</a>
+
+<h3>Archive transaction history and restart ledger</h3>
+<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <input type="submit" name="archive" value="Archive and restart ledger">
+</form>
+
+<?php //Handle the archive and restart function of the ledger
+
+if isset($_POST["archive"]) {
+    $new_archive_name = (new DateTime(date('Y-m-d')))->format('Y-m-d') . '-transactions' . '.csv';
+
+    //Need to finish this function
+
+}
+
+
+?>
+
 </html>
