@@ -167,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php //Handle the archive and restart function of the ledger
 
-if isset($_POST["archive"]) {
+if (isset($_POST["archive"])) {
     $new_archive_name = (new DateTime(date('Y-m-d')))->format('Y-m-d') . '-transactions' . '.csv';
 
     //Need to finish this function
